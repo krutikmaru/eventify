@@ -1,24 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { useState } from "react";
+import Login from "./components/Authentication/Login";
+import Home from "./components/Home/Home";
+import ListEvent from "./components/ListEvent/ListEvent";
+import Event from "./components/Home/Event";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useUser } from "./contexts/UserContext";
+import BookEvent from "./components/Home/BookEvent";
 function App() {
+  const { user } = useUser();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Routes>
+        {user ? (
+          <>
+            <Route path="/" element={<Home />} />
+            <Route path="/list-event" element={<ListEvent />} />
+            <Route path="/event" element={<BookEvent />} />
+            <Route path="/login" element={<Navigate to="/" replace />} />
+          </>
+        ) : (
+          <>
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route
+              path="/list-event"
+              element={<Navigate to="/login" replace />}
+            />
+            <Route path="/event" element={<Navigate to="/login" replace />} />
+            <Route path="/login" element={<Login />} />
+          </>
+        )}
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </>
   );
 }
 
